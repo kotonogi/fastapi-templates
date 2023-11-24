@@ -1,0 +1,1 @@
+coverrage run -m pytest tests
