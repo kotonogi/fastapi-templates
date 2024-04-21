@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+
 from fastapi_templates.db import get_session
 from fastapi_templates.services.tasks.api import get_tasks_repositorys
 from fastapi_templates.services.tasks.models import Tasks
@@ -26,6 +27,7 @@ def get_task(id: int, session=Depends(get_session)):
     task = repo.get_task(id)
     if task is None:
         return HTTPException(status_code=404, detail="Task not found")
+    print(task.completed_at)
     return task
 
 

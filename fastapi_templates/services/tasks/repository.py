@@ -2,6 +2,7 @@ from typing import Optional
 
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select
+
 from fastapi_templates.services.tasks.schemas import TasksCreate, TasksUpdate
 
 from .models import Tasks
@@ -24,7 +25,7 @@ class TasksRepository:
         statement = select(Tasks).offset(offset).limit(limit)
         result = self.session.exec(statement).all()
 
-        return result
+        return list(result)
 
     def get_task(self, id: int) -> Optional[Tasks]:
         statement = select(Tasks).where(Tasks.id == id)
@@ -35,8 +36,8 @@ class TasksRepository:
             return None
 
     def create_task(self, task: TasksCreate) -> Tasks:
-        target = Tasks.from_orm(task)
-        self.session.add(task)
+        target = Tasks.model_validate(task)
+        self.session.add(target)
         self.session.commit()
         self.session.refresh(target)
 
@@ -58,4 +59,3 @@ class TasksRepository:
         self.session.refresh(update_target)
 
         return update_target
-
