@@ -2,7 +2,7 @@ up-local-server:
 	docker-compose -f docker-compose.yml up -d web
 
 down-local-server:
-	docker-compose -f docker-compose.yml down web
+	docker-compose -f docker-compose.yml down 
 
 migration-file:
 	@if [ -z "$(MIGRATION_MESSAGE)" ]; then \

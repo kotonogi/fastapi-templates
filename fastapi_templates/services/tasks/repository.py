@@ -1,4 +1,3 @@
-from turtle import update
 from typing import Optional
 
 from sqlalchemy.exc import NoResultFound

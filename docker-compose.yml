@@ -16,7 +16,7 @@ services:
         - 8000:8000
       volumes:
         - ./fastapi_templates:/app/fastapi_templates
-      command: ["python", "-m", "poetry", "run", "uvicorn", "toodo.main:app", "--reload", "--proxy-headers", "--host", "0.0.0.0", "--port", "8000"]
+      command: ["python", "-m", "poetry", "run", "uvicorn", "fastapi_templates.main:app", "--reload", "--proxy-headers", "--host", "0.0.0.0", "--port", "8000"]
       working_dir: /app
 
   mysql:
