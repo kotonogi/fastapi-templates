@@ -8,13 +8,19 @@
 - DB migration: alembic
 
 
+## test
+
+```
+make test
+```
+
 ## DBマイグレーション
 ```
 # マイグレーションファイルの作成
-make migration
+make migration-file
 
 # マイグレーションファイルのDBへの適用
-make upgrade_migration
+make run_migration
 ```
 
 ## メモ

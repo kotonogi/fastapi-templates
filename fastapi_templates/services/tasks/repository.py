@@ -3,6 +3,7 @@ from typing import Optional
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select
 
+from fastapi_templates.exception import ResourceDoesNotExistError
 from fastapi_templates.services.tasks.schemas import TasksCreate, TasksUpdate
 
 from .models import Tasks
@@ -27,7 +28,7 @@ class TasksRepository:
 
         return list(result)
 
-    def get_task(self, id: int) -> Optional[Tasks]:
+    def get_task(self, id: int) -> Tasks | None:
         statement = select(Tasks).where(Tasks.id == id)
         results = self.session.exec(statement)
         try:
@@ -43,13 +44,21 @@ class TasksRepository:
 
         return target
 
+    def delete_task(self, id: int) -> None:
+        target = self.get_task(id)
+        if target is None:
+            raise ResourceDoesNotExistError
+
+        self.session.delete(target)
+        self.session.commit()
+
     def update_task(self, id: int, task: TasksUpdate) -> Optional[Tasks]:
         update_target = self.get_task(id)
 
         if update_target is None:
-            return None
+            raise ResourceDoesNotExistError
 
-        update_args = task.dict()
+        update_args = task.model_dump()
 
         for key, value in update_args.items():
             setattr(update_target, key, value)

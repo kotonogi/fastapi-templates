@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from fastapi_templates.db import get_session
+from fastapi_templates.exception import ResourceDoesNotExistError
 from fastapi_templates.services.tasks.api import get_tasks_repositorys
 from fastapi_templates.services.tasks.models import Tasks
 from fastapi_templates.services.tasks.schemas import TasksCreate, TasksRead, TasksUpdate
@@ -24,11 +25,20 @@ def create_task(task: TasksCreate, session=Depends(get_session)):
 @router.get(path="/{id}", response_model=TasksRead)
 def get_task(id: int, session=Depends(get_session)):
     repo = get_tasks_repositorys(session)
-    task = repo.get_task(id)
-    if task is None:
+    try:
+        task = repo.get_task(id)
+    except ResourceDoesNotExistError:
         return HTTPException(status_code=404, detail="Task not found")
-    print(task.completed_at)
     return task
+
+
+@router.delete(path="/{id}")
+def delete_task(id: int, session=Depends(get_session)):
+    repo = get_tasks_repositorys(session)
+    try:
+        repo.delete_task(id)
+    except ResourceDoesNotExistError:
+        return HTTPException(status_code=404, detail="Task not found")
 
 
 @router.patch(path="/{id}", response_model=TasksRead)
