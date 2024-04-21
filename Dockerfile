@@ -1,5 +1,5 @@
 # ベースとなるイメージの選択
-FROM python:3.11
+FROM python:3.12
 
 # 作業ディレクトリの設定
 WORKDIR /app
