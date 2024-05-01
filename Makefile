@@ -22,7 +22,4 @@ run-migration:
 
 
 test:
-	docker-compose -f docker-compose.yml -f docker-compose.test.yml build
-	docker-compose -f docker-compose.yml -f docker-compose.test.yml run --rm web 
-	docker-compose -f docker-compose.yml -f docker-compose.test.yml down
-	docker image  prune -f
+	docker-compose run --rm tox
